@@ -53,7 +53,7 @@ func Authorize(account_id int, plainTextPassword []byte, db *sql.DB) bool {
 
 	var password string
 	sqlStatement := `SELECT password FROM users WHERE account_id=$1`
-	row := db.QueryRow(sqlStatement, user.Username)
+	row := db.QueryRow(sqlStatement, account_id)
 
 	err := row.Scan(&password)
 
