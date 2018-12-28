@@ -30,12 +30,12 @@ func GetUniqueIdentifier(username string) string {
 
 
 	uniqueString := strconv.Itoa(uniqueID)
+
+
 	
 
-	fmt.Println(uniqueString)
 
-
-	return GenerateHashSalt(uniqueString)
+	return uniqueString
 
 }
 
