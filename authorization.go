@@ -48,8 +48,7 @@ func VerifyHashedPassword(hashedPassword string, plainTextPassword []byte) bool{
 }
 
 
-func Authorize(account_id int, plainTextPassword []byte, db *sql.DB) bool {
-
+func AwaitingAuthroization(account_id int, plainTextPassword []byte, db *sql.DB) bool {
 
 	var password string
 	sqlStatement := `SELECT password FROM users WHERE account_id=$1`
@@ -70,6 +69,31 @@ func Authorize(account_id int, plainTextPassword []byte, db *sql.DB) bool {
 
 
 		return VerifyHashedPassword(password, plainTextPassword)
+
+	}
+
+}
+
+func Authorize(account_id int, plainTextPassword []byte, db *sql.DB) (bool, string) {
+
+
+	var password string
+	var email string
+	sqlStatement := `SELECT password, email FROM unverified_users WHERE account_id=$1`
+	rows := db.QueryRow(sqlStatement, account_id)
+
+	err := rows.Scan(&password, &email)
+
+	if err == sql.ErrNoRows {
+		fmt.Println("Not found")
+		return false, "nil"
+	}else if err != nil {
+		fmt.Println("UNACUGHT ERROR")
+		return false, "nil"
+	}else{
+
+		fmt.Println("Found it, now compare passwords")
+		return VerifyHashedPassword(password, plainTextPassword), email
 
 	}
 
