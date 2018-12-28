@@ -18,22 +18,15 @@ type User struct {
 
 func GetUniqueIdentifier(username string) string {
 
-
 	code := 71923
 
 	for index, char := range username {
 		code += (int(char) + index)
 	}
 
-
 	uniqueID := code / 2 + ((code + 2) * 2)
 
-
 	uniqueString := strconv.Itoa(uniqueID)
-
-
-	
-
 
 	return uniqueString
 
@@ -77,23 +70,17 @@ func Authorize(account_id int, plainTextPassword []byte, db *sql.DB) bool {
 	err := row.Scan(&password)
 
 	if err == sql.ErrNoRows {
-		fmt.Println("Not found")
 		return false
 	}else if err != nil {
-		fmt.Println("UNACUGHT ERROR")
+		fmt.Println("Uncaught Server error when attempting to Authorize a User", err)
 		return false
 	}else{
-
-
-		fmt.Println("Found it, now compare passwords")
 		return VerifyHashedPassword(password, plainTextPassword)
-
 	}
 
 }
 
 func AwaitingAuthorization(account_id int, plainTextPassword []byte, db *sql.DB) (bool, string) {
-
 
 	var password string
 	var email string
@@ -103,18 +90,13 @@ func AwaitingAuthorization(account_id int, plainTextPassword []byte, db *sql.DB)
 	err := rows.Scan(&password, &email)
 
 	if err == sql.ErrNoRows {
-		fmt.Println("Not found")
 		return false, "nil"
 	}else if err != nil {
-		fmt.Println("UNACUGHT ERROR")
+		fmt.Println("Uncaught Server error when attempting to Authorize a User", err)
 		return false, "nil"
 	}else{
-
-		fmt.Println("Found it, now compare passwords")
 		return VerifyHashedPassword(password, plainTextPassword), email
-
 	}
-
 }
 
 
@@ -127,13 +109,12 @@ func UserExists(user User, db *sql.DB) (bool, int){
 	err := row.Scan(&account_id)
 
 	if err == sql.ErrNoRows {
-		fmt.Println("USER NOT FOUND")
 		return false, 0
 	}else if err != nil {
-		fmt.Println("UNCAUGHT ERROR : ", err)
+		fmt.Println("Uncaught Server error when attempting to check if a User exists", err)
 		return true, 0
 	}else{
-		fmt.Println("USER ALREADY IN DB")
+
 		return true, account_id
 	}
 }
@@ -147,13 +128,11 @@ func EmailExists(user User, db *sql.DB) bool{
 	err := row.Scan(&account_id)
 
 	if err == sql.ErrNoRows {
-		fmt.Println("USER NOT FOUND")
 		return false
 	}else if err != nil {
-		fmt.Println("UNCAUGHT ERROR : ", err)
+		fmt.Println("Uncaught Server error when attempting to check if an Email Address exists", err)
 		return true
 	}else{
-		fmt.Println("USER ALREADY IN DB")
 		return true
 	}
 
