@@ -19,7 +19,6 @@ type User struct {
 func GetUniqueIdentifier(username string) string {
 
 
-
 	code := 71923
 
 	for index, char := range username {
@@ -31,6 +30,10 @@ func GetUniqueIdentifier(username string) string {
 
 
 	uniqueString := strconv.Itoa(uniqueID)
+	
+
+	fmt.Println(uniqueString)
+
 
 	return GenerateHashSalt(uniqueString)
 
