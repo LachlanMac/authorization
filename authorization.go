@@ -4,6 +4,7 @@ package authorization
 import (
 	"golang.org/x/crypto/bcrypt"
 	"database/sql"
+	"fmt"
 )
 
 type User struct {
