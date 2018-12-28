@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"database/sql"
 	"fmt"
+	"strconv"
 )
 
 type User struct {
@@ -15,18 +16,34 @@ type User struct {
 }
 
 
+func GetUniqueIdentifier(username string) string {
+
+
+
+	code := 71923
+
+	for index, char := range username {
+		code += (int(char) + index)
+	}
+
+
+	uniqueID := code / 2 + ((code + 2) * 2)
+
+
+	uniqueString := strconv.Itoa(uniqueID)
+
+	return GenerateHashSalt(uniqueString)
+
+}
+
 
 func GenerateHashSalt(password string) string{
 
-
 	passwordSlice := []byte(password)
-
-
 	hash, err := bcrypt.GenerateFromPassword(passwordSlice, bcrypt.MinCost)
 	if err != nil {
 		fmt.Println(err)
 	}
-
 
 	return string(hash)
 
@@ -66,8 +83,6 @@ func Authorize(account_id int, plainTextPassword []byte, db *sql.DB) bool {
 
 
 		fmt.Println("Found it, now compare passwords")
-
-
 		return VerifyHashedPassword(password, plainTextPassword)
 
 	}
@@ -96,8 +111,6 @@ func AwaitingAuthorization(account_id int, plainTextPassword []byte, db *sql.DB)
 		return VerifyHashedPassword(password, plainTextPassword), email
 
 	}
-
-
 
 }
 
