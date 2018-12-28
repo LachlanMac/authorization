@@ -48,7 +48,7 @@ func VerifyHashedPassword(hashedPassword string, plainTextPassword []byte) bool{
 }
 
 
-func AwaitingAuthroization(account_id int, plainTextPassword []byte, db *sql.DB) bool {
+func Authorize(account_id int, plainTextPassword []byte, db *sql.DB) bool {
 
 	var password string
 	sqlStatement := `SELECT password FROM users WHERE account_id=$1`
@@ -74,7 +74,7 @@ func AwaitingAuthroization(account_id int, plainTextPassword []byte, db *sql.DB)
 
 }
 
-func Authorize(account_id int, plainTextPassword []byte, db *sql.DB) (bool, string) {
+func AwaitingAuthorization(account_id int, plainTextPassword []byte, db *sql.DB) (bool, string) {
 
 
 	var password string
