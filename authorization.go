@@ -48,8 +48,37 @@ func VerifyHashedPassword(hashedPassword string, plainTextPassword []byte) bool{
 }
 
 
+func Authorize(account_id int, plainTextPassword []byte, db *sql.DB) bool {
 
-func UserExists(user User, db *sql.DB) bool{
+
+	var password string
+	sqlStatement := `SELECT password FROM users WHERE account_id=$1`
+	row := db.QueryRow(sqlStatement, user.Username)
+
+	err := row.Scan(&password)
+
+	if err == sql.ErrNoRows {
+		fmt.Println("Not found")
+		return false
+	}else if err != nil {
+		fmt.Println("UNACUGHT ERROR")
+		return false
+	}else{
+
+
+		fmt.Println("Found it, now compare passwords")
+
+
+		return VerifyHashedPassword(password, plainTextPassword)
+
+	}
+
+
+
+}
+
+
+func UserExists(user User, db *sql.DB) (bool, int){
 
 	var account_id int
 	sqlStatement := `SELECT account_id FROM users WHERE user_name=$1`
@@ -59,13 +88,13 @@ func UserExists(user User, db *sql.DB) bool{
 
 	if err == sql.ErrNoRows {
 		fmt.Println("USER NOT FOUND")
-		return false
+		return false, 0
 	}else if err != nil {
 		fmt.Println("UNCAUGHT ERROR : ", err)
-		return true
+		return true, 0
 	}else{
 		fmt.Println("USER ALREADY IN DB")
-		return true
+		return true, account_id
 	}
 }
 
