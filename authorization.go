@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
-	"github.com/LachlanMac/authorization"
+	
 )
 
 type User struct {
