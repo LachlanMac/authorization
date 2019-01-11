@@ -6,6 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
+	"github.com/LachlanMac/authorization"
 )
 
 type User struct {
@@ -13,6 +14,56 @@ type User struct {
 	Username string
 	Password string
 	Email string
+}
+
+
+type Character struct {
+	ID       int
+	Name     string
+	X        float64
+	Y        float64
+	SectorID int
+	Model    int
+}
+
+func GetCharacter(account_id int, db *sql.DB) (Character, error){
+
+
+	var id int
+	var name string
+	var x float64
+	var y float64
+	var secId int
+	var model int
+
+	emptyChar := Character{}
+
+	sqlStatement := `SELECT character_id, character_name, character_model, x_pos, y_pos, sector_id FROM characters WHERE account_id=$1`
+
+	row := db.QueryRow(sqlStatement, account_id)
+
+	err := row.Scan(&id, &name, &model, &x, &y, &secId)
+
+	if err == sql.ErrNoRows {
+		return emptyChar, err
+	}else if err != nil {
+		fmt.Println("Uncaught Server error when attempting to Authorize a User", err)
+		return emptyChar, err
+	}else{
+
+		char := Character{id, name, x, y, secId, model}
+		return char, nil
+	}
+
+}
+
+
+func AddUser(user authorization.User, db *sql.DB) error{
+
+	sqlStatement := `INSERT INTO users (user_name, email, password)VALUES ($1, $2, $3)`
+	_, err := db.Exec(sqlStatement, user.Username, user.Email, user.Password)
+
+	return err
 }
 
 
