@@ -6,7 +6,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
-	
+
 )
 
 type User struct {
@@ -58,7 +58,7 @@ func GetCharacter(account_id int, db *sql.DB) (Character, error){
 }
 
 
-func AddUser(user authorization.User, db *sql.DB) error{
+func AddUser(user User, db *sql.DB) error{
 
 	sqlStatement := `INSERT INTO users (user_name, email, password)VALUES ($1, $2, $3)`
 	_, err := db.Exec(sqlStatement, user.Username, user.Email, user.Password)
