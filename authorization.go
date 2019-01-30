@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/golang/mock/sample"
 )
 
 type User struct {
@@ -23,7 +24,7 @@ type Character struct {
 	X        float64
 	Y        float64
 	SectorID int
-	Model    int
+	Model    string
 }
 
 
@@ -50,13 +51,20 @@ func CharNameExists(charName string,  db *sql.DB) (bool, error){
 	for rows.Next() {
 		err = rows.Scan(&id)
 		exists = true
-
-
 	}
 
 	rows.Close()
 
 	return exists, err
+
+}
+
+func AddCharacter(account_id int, character_name string, model string,  db *sql.DB) (error){
+
+	sqlStatement := `INSERT INTO characters (account_id, character_name, character_model, x_pos, y_pos, sector_id)VALUES ($1, $2, $3, $4, $5, $6)`
+	_, err := db.Exec(sqlStatement, account_id, character_name, model, 2000, 2000, 27422)
+
+	return err
 
 }
 
@@ -67,7 +75,7 @@ func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 
 	rows, err := db.Query(sqlStatement, account_id)
 	if err != nil {
-		fmt.Println("ERROR OCCURED")
+		fmt.Println("ERROR OCCURED", err)
 	}
 	defer rows.Close()
 
@@ -77,16 +85,12 @@ func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 
 	for rows.Next(){
 
-
-		fmt.Println("Got some rows!")
-
-
 		var id int
 		var name string
 		var x float64
 		var y float64
 		var secId int
-		var model int
+		var model string
 
 
 		err := rows.Scan(&id, &name, &model, &x, &y, &secId)
@@ -97,9 +101,6 @@ func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 			char := Character{id, name, x, y, secId, model}
 
 			characters = append(characters, char)
-
-
-			fmt.Println("Returning character : ", char.Name, char.ID, char.X, char.Y)
 
 		}else{
 
