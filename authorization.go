@@ -103,7 +103,7 @@ func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 
 		}else{
 
-			fmt.Println("Error reading rows")
+			fmt.Println("Error reading rows", err)
 		}
 
 	}
