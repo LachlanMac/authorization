@@ -95,6 +95,9 @@ func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 
 			characters = append(characters, char)
 
+
+			fmt.Println("Returning character : ", char.Name, char.ID, char.X, char.Y)
+
 		}
 	}
 
