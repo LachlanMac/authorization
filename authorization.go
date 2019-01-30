@@ -26,6 +26,40 @@ type Character struct {
 	Model    int
 }
 
+
+func CharNameExists(charName string,  db *sql.DB) (bool, error){
+
+
+	sqlStatement := `SELECT character_id FROM characters WHERE character_name=$1`
+
+
+	rows, err := db.Query(sqlStatement, charName)
+
+	if err != nil{
+
+		fmt.Println("ERROR checking charname")
+		return true, err
+	}
+
+
+	var id int
+
+
+	var exists bool
+
+	for rows.Next() {
+		err = rows.Scan(&id)
+		exists = true
+
+
+	}
+
+	rows.Close()
+
+	return exists, err
+
+}
+
 func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 
 
