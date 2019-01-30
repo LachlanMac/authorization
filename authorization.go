@@ -29,14 +29,7 @@ type Character struct {
 func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 
 
-
-
-	emptyChar := Character{}
-
 	sqlStatement := `SELECT character_id, character_name, character_model, x_pos, y_pos, sector_id FROM characters WHERE account_id=$1`
-
-
-
 
 	rows, err := db.Query(sqlStatement, account_id)
 	if err != nil {
