@@ -6,8 +6,6 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
-
-	"github.com/golang/mock/sample"
 )
 
 type User struct {
