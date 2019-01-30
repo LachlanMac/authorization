@@ -26,34 +26,52 @@ type Character struct {
 	Model    int
 }
 
-func GetCharacter(account_id int, db *sql.DB) (Character, error){
+func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 
 
-	var id int
-	var name string
-	var x float64
-	var y float64
-	var secId int
-	var model int
+
 
 	emptyChar := Character{}
 
 	sqlStatement := `SELECT character_id, character_name, character_model, x_pos, y_pos, sector_id FROM characters WHERE account_id=$1`
 
-	row := db.QueryRow(sqlStatement, account_id)
 
-	err := row.Scan(&id, &name, &model, &x, &y, &secId)
 
-	if err == sql.ErrNoRows {
-		return emptyChar, err
-	}else if err != nil {
-		fmt.Println("Uncaught Server error when attempting to Authorize a User", err)
-		return emptyChar, err
-	}else{
 
-		char := Character{id, name, x, y, secId, model}
-		return char, nil
+	rows, err := db.Query(sqlStatement, account_id)
+	if err != nil {
+		fmt.Println("ERROR OCCURED")
 	}
+	defer rows.Close()
+
+
+	var characters []Character
+
+
+	for rows.Next(){
+
+
+		var id int
+		var name string
+		var x float64
+		var y float64
+		var secId int
+		var model int
+
+
+		err := rows.Scan(&id, &name, &model, &x, &y, &secId)
+
+		if err != nil{
+
+
+			char := Character{id, name, x, y, secId, model}
+
+			characters = append(characters, char)
+
+		}
+	}
+
+	return characters, err
 
 }
 
