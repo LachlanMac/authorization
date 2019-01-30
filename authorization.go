@@ -91,7 +91,7 @@ func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 
 		err := rows.Scan(&id, &name, &model, &x, &y, &secId)
 
-		if err != nil{
+		if err == nil{
 
 
 			char := Character{id, name, x, y, secId, model}
