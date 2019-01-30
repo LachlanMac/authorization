@@ -78,6 +78,9 @@ func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 	for rows.Next(){
 
 
+		fmt.Println("Got some rows!")
+
+
 		var id int
 		var name string
 		var x float64
@@ -98,7 +101,11 @@ func GetCharacters(account_id int, db *sql.DB) ([]Character, error){
 
 			fmt.Println("Returning character : ", char.Name, char.ID, char.X, char.Y)
 
+		}else{
+
+			fmt.Println("Error reading rows")
 		}
+
 	}
 
 	return characters, err
